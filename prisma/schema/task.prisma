@@ -1,0 +1,10 @@
+model Task {
+  id                String        @id @default(cuid())
+  serverCreatedAt   BigInt        
+  serverUpdatedAt   BigInt        
+  createdAt         BigInt
+  updatedAt         BigInt
+  name              String
+  icon              String
+  isDone            Boolean
+}

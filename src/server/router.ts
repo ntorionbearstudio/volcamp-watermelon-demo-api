@@ -2,6 +2,7 @@ import { createTRPCRouter } from '@/server/config/trpc';
 import { accountRouter } from '@/server/routers/account';
 import { authRouter } from '@/server/routers/auth';
 import { repositoriesRouter } from '@/server/routers/repositories';
+import { syncRouter } from '@/server/routers/sync';
 import { usersRouter } from '@/server/routers/users';
 
 /**
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   auth: authRouter,
   repositories: repositoriesRouter,
   users: usersRouter,
+  sync: syncRouter,
 });
 
 // export type definition of API

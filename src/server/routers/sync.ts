@@ -184,7 +184,7 @@ export const syncRouter = createTRPCRouter({
         },
       });
 
-      const updatedTasks = await ctx.db.task.findMany({
+      let updatedTasks = await ctx.db.task.findMany({
         where: {
           AND: [
             {
@@ -200,6 +200,13 @@ export const syncRouter = createTRPCRouter({
           ],
         },
       });
+
+      if (input?.schemaVersion >= 2 && input?.migration) {
+        const migration = JSON.parse(input?.migration);
+        if (migration?.from < 2) {
+          updatedTasks = await ctx.db.task.findMany();
+        }
+      }
 
       return {
         timestamp: Date.now(),

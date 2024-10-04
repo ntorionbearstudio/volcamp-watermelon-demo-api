@@ -7,4 +7,6 @@ model Task {
   name              String
   icon              String
   isDone            Boolean
+  isUrgent          Boolean       @default(false)
+  comment           String        @default("")
 }

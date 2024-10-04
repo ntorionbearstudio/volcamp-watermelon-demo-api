@@ -8,6 +8,8 @@ export type Task = {
   name: string;
   icon: string;
   isDone: boolean;
+  isUrgent: boolean;
+  comment: string;
   createdAt: number;
   updatedAt: number;
 };
@@ -17,6 +19,8 @@ const zTask = z.object({
   name: z.string(),
   icon: z.string(),
   is_done: z.boolean(),
+  is_urgent: z.boolean().optional(),
+  comment: z.string().optional(),
   created_at: z.number(),
   updated_at: z.number(),
 });
@@ -74,6 +78,12 @@ export const syncRouter = createTRPCRouter({
                   name: createdTask.name,
                   icon: createdTask.icon,
                   isDone: createdTask.is_done,
+                  ...(createdTask.is_urgent !== undefined
+                    ? { isUrgent: createdTask.is_urgent }
+                    : {}),
+                  ...(createdTask.comment !== undefined
+                    ? { comment: createdTask.comment }
+                    : {}),
                   updatedAt: createdTask.updated_at,
                 });
               } else {
@@ -82,6 +92,8 @@ export const syncRouter = createTRPCRouter({
                   name: createdTask.name,
                   icon: createdTask.icon,
                   isDone: createdTask.is_done,
+                  isUrgent: createdTask.is_urgent,
+                  comment: createdTask.comment,
                   createdAt: createdTask.created_at,
                   updatedAt: createdTask.updated_at,
                   serverCreatedAt: now,
@@ -105,6 +117,12 @@ export const syncRouter = createTRPCRouter({
                 name: updatedTask.name,
                 icon: updatedTask.icon,
                 isDone: updatedTask.is_done,
+                ...(updatedTask.is_urgent !== undefined
+                  ? { isUrgent: updatedTask.is_urgent }
+                  : {}),
+                ...(updatedTask.comment !== undefined
+                  ? { comment: updatedTask.comment }
+                  : {}),
                 updatedAt: updatedTask.updated_at,
               });
             }
@@ -187,19 +205,23 @@ export const syncRouter = createTRPCRouter({
         timestamp: Date.now(),
         changes: {
           tasks: {
-            created: createdTasks?.map((task: Task) => ({
+            created: createdTasks?.map((task) => ({
               id: task.id,
               name: task.name,
               icon: task.icon,
               is_done: task.isDone,
+              is_urgent: task.isUrgent,
+              comment: task.comment,
               created_at: Number(task.createdAt),
               updated_at: Number(task.updatedAt),
             })),
-            updated: updatedTasks?.map((task: Task) => ({
+            updated: updatedTasks?.map((task) => ({
               id: task.id,
               name: task.name,
               icon: task.icon,
               is_done: task.isDone,
+              is_urgent: task.isUrgent,
+              comment: task.comment,
               created_at: Number(task.createdAt),
               updated_at: Number(task.updatedAt),
             })),

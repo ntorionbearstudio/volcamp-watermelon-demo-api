@@ -171,6 +171,8 @@ export const syncRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
+      const newLastPulledAt = Date.now();
+
       let safeLastPulledAt = 1;
       if (!!input.lastPulledAt) {
         safeLastPulledAt = input.lastPulledAt;
@@ -209,7 +211,7 @@ export const syncRouter = createTRPCRouter({
       }
 
       return {
-        timestamp: Date.now(),
+        timestamp: newLastPulledAt,
         changes: {
           tasks: {
             created: createdTasks?.map((task) => ({
